@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/food-items")
@@ -53,7 +56,13 @@ public class FoodItemController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<FoodItemDto> createFoodItem(@Valid @RequestBody FoodItemDto foodItemDto) {
-        return ResponseEntity.ok(foodItemService.saveFoodItem(foodItemDto));
+
+        FoodItemDto foodItem = foodItemService.saveFoodItem(foodItemDto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(foodItem.getId()).toUri();
+        return ResponseEntity.created(location).body(foodItem);
     }
 
     @PutMapping("/{id}")
