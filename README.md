@@ -146,3 +146,9 @@ DELETE /api/food-items/1
 ```
 mvn test
 ```
+
+#### Swagger 
+```
+http://localhost:8080/api/swagger-ui/index.html
+```
+
