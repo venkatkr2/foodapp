@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: foodappdb
+      POSTGRES_USER: devuser1
+      POSTGRES_PASSWORD: dwicfei12
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    ports:
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/foodappdb?currentSchema=food_schema
+      SPRING_DATASOURCE_USERNAME: devuser1
+      SPRING_DATASOURCE_PASSWORD: dwicfei12
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
